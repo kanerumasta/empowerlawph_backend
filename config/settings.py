@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from os import getenv, path
-
+import dotenv
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -56,8 +57,14 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_yasg',
     'djoser',
+
+
     'accounts',
+    'case',
+    'search',
+   
 ]
 
 MIDDLEWARE = [
@@ -94,6 +101,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=360),
+}
 
 
 DJOSER = {
@@ -156,6 +167,18 @@ DATABASES = {
     }
 }
 
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Enter: **Bearer <JWT Token>**",
+        }
+    },
+    "USE_SESSION_AUTH": False,  # Disable Django session authentication in Swagger UI
+}
 
 
 # Password validation
