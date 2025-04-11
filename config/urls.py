@@ -17,7 +17,7 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=[permissions.AllowAny],
-    
+
 )
 
 
@@ -28,6 +28,7 @@ urlpatterns = [
 [
     path('auth/', include('djoser.urls.jwt')),
     path('auth/', include('djoser.urls')),
+    path('auth/', include('accounts.urls')),
     path('search', include('search.urls')),
 ]
     )),
