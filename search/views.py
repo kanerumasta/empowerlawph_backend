@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, SearchHeadline
 from django.db.models.expressions import RawSQL
 from django.db import connection
 
@@ -25,16 +25,14 @@ class SearchView(APIView):
     )
     def get(self, request):
         query = self.request.GET.get('q','')
-        search_vector = SearchVector("title", weight="A") + SearchVector("full_text", weight="B")
-        search_query = SearchQuery(query,search_type="websearch")
+        search_vector = SearchVector("title","full_text")
+        search_query = SearchQuery(query)
+        search_headline = SearchHeadline("full_text", search_query)
         
-        cases_results = Case.objects.annotate(
-            search_vector=search_vector,
-            rank=SearchRank(search_vector, search_query),
-        ).filter(search_vector__icontains=query).order_by('-rank')
+        cases_results = Case.objects.annotate(rank=SearchRank(search_vector, search_query)).annotate(headline = search_headline).filter(rank__gte = 0.001)
 
-        print(connection.queries)
-        print(cases_results)
+        for result in cases_results:
+            print(result.headline)
         case_serializer = CaseSerializer(cases_results, many=True)
 
         return Response({"cases":case_serializer.data}, status=status.HTTP_200_OK)
