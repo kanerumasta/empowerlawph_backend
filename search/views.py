@@ -15,8 +15,8 @@ class SearchView(APIView):
     @swagger_auto_schema(
         manual_parameters=[
             openapi.Parameter(
-                "q", openapi.IN_QUERY, 
-                description="Search keyword", 
+                "q", openapi.IN_QUERY,
+                description="Search keyword",
                 type=openapi.TYPE_STRING,
                 required=False
             )
@@ -28,7 +28,7 @@ class SearchView(APIView):
         search_vector = SearchVector("title","full_text")
         search_query = SearchQuery(query)
         search_headline = SearchHeadline("full_text", search_query)
-        
+
         cases_results = Case.objects.annotate(rank=SearchRank(search_vector, search_query)).annotate(headline = search_headline).filter(rank__gte = 0.001)
 
         for result in cases_results:
@@ -36,5 +36,3 @@ class SearchView(APIView):
         case_serializer = CaseSerializer(cases_results, many=True)
 
         return Response({"cases":case_serializer.data}, status=status.HTTP_200_OK)
-
-        

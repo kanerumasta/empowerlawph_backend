@@ -10,14 +10,7 @@ dotenv_file = BASE_DIR / '.env.local'
 
 if path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
-
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-fu((!8w#8vy0dw$j2t9_77_p2ivcwo$093lx@x)y)ry0@-7lxd'
@@ -31,8 +24,6 @@ ALLOWED_HOSTS = [
     '10.160.153.57',
     '10.160.153.131'
 ]
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -69,8 +60,6 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'config.urls'
 
 CORS_ALLOW_CREDENTIALS = True
-
-# CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = [
     "http://10.160.153.163:3000",
     "http://127.0.0.1:3000",
@@ -97,7 +86,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(minutes=360),
 }
 
@@ -105,8 +94,11 @@ SIMPLE_JWT = {
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'LOGIN FIELD' : 'email',
-    'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
+    "PERMISSIONS": {
+        "user_create": ["rest_framework.permissions.AllowAny"],
+    }
+    # 'ACTIVATION_URL': 'activate/{uid}/{token}',
+    # 'SEND_ACTIVATION_EMAIL': True,
 
 }
 
@@ -131,34 +123,14 @@ REST_FRAMEWORK = {
     ],
 }
 
-
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
-
     'default': {
-
         'ENGINE': 'django.db.backends.postgresql',
-
         'NAME': 'empowerlawph_DB',
-
         'USER': 'postgres',
-
         'PASSWORD': '011456',
-
         'HOST': 'localhost',
-
         'PORT': '5432',
-
     }
 }
 
@@ -174,29 +146,6 @@ SWAGGER_SETTINGS = {
     },
     "USE_SESSION_AUTH": False,  # Disable Django session authentication in Swagger UI
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
-#Disable password validator to not contradict with frontend validator
-# AUTH_PASSWORD_VALIDATORS = [
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-#     },
-# ]
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Manila'
